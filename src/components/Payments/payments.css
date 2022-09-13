@@ -1,0 +1,48 @@
+.payments__list {
+    margin: 0 auto;
+    flex-grow: 1;
+    max-width: 1000px;
+    height: 100vh;
+    overflow-y: scroll;
+}
+.payments__item {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #000;
+    text-align: center;
+}
+
+.payments__item div {
+    flex: 1;
+}
+
+.payments__amount {
+    display: flex;
+    flex-direction: column;
+}
+
+.payments__amount--buttonsContainer {
+    display: flex;
+    justify-content: space-around;
+    width: 30%;
+    margin: 0 auto;
+}
+
+.payments__amount--btn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+.payments__amount--btn.add {
+    background-color: rgb(51, 204, 51);
+}
+.payments__amount--btn.remove {
+    background-color: rgba(255, 0, 0, 0.555);
+}
+
