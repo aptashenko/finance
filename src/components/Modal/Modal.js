@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import './modal.css';
-import Form from '../Wallet/Form';
+import Form from '../Wallet/Form/Form';
 
 
 export default class Modal extends Component {
 
     render() {
-        const { handleInput, formSubmitHandler } = this.props;
+        const { handleInput, formSubmitHandler, isProfitInput, handleCategory, handleManager } = this.props;
         return (
             <div className="modal__backdrop" onClick={this.props.close}>
                 <div className="modal__content">
-                    <Form submit={formSubmitHandler} input={handleInput} />
+                    <Form isProfitInput={isProfitInput} handleCategory={handleCategory} handleManager={handleManager} submit={formSubmitHandler} input={handleInput} />
                 </div>
             </div>
         )

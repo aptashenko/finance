@@ -11,6 +11,7 @@ class App extends React.Component {
     payments: [],
     sum: 0,
     showModal: false,
+    isPofitInput: false,
   };
 
   componentWillMount() {
@@ -24,10 +25,22 @@ class App extends React.Component {
     }
   }
 
+  closeModal = () => {
+    this.setState({showModal: false})
+  }
+
   toggleModal = (e) => {
+    const plusButton = e.target.classList.contains('plus');
+    const minusButton = e.target.classList.contains('minus');
     e.target === e.currentTarget && this.setState(prevState => ({
       showModal: !prevState.showModal,
     }))
+    plusButton && this.setState({
+      isPofitInput: true,
+    })
+    minusButton && this.setState({
+      isPofitInput: false,
+    })
   }
 
   addtoLocalStorage = (payments, sum) => {
@@ -69,10 +82,10 @@ class App extends React.Component {
   }
 
   render() {
-    const { payments, sum, showModal } = this.state;
+    const { payments, sum, showModal, isPofitInput } = this.state;
     return (
       <div className='container'>
-        <Wallet onSubmit={this.addPayment} sum={sum} showModal={showModal} modal={this.toggleModal} />
+        <Wallet onSubmit={this.addPayment} closeModal={this.closeModal} isProfitInput={isPofitInput} sum={sum} showModal={showModal} modal={this.toggleModal} />
         <PaymentsList list={payments} addPayment={this.addPaymentToWallet} removePayment={this.removePayment} />
       </div>
     )

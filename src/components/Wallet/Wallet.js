@@ -9,8 +9,8 @@ export class Wallet extends Component {
     state = {
         id: null,
         amount: '',
-        name: 'Artem Ptashenko',
-        category: 'Salary',
+        name: '',
+        category: '',
         date: '',
         time: '',
         isFuture: null,
@@ -26,6 +26,14 @@ export class Wallet extends Component {
         e.currentTarget.classList.contains('plus') ? this.setState({ amount: `+${e.target.value}`, id: shortid.generate() }) : this.setState({ amount: `-${e.target.value}`, id: shortid.generate() });
     };
 
+    handleCategory = val => {
+        this.setState({category: val.label})
+    }
+
+    handleManager = val => {
+        this.setState({name: val.label})
+    }
+
     formSubmitHandler = (e) => {
         e.preventDefault();
         this.setCurrentTime();
@@ -34,13 +42,14 @@ export class Wallet extends Component {
             this.props.onSubmit(this.state)
         }, 100)
         e.target.reset();
+        this.props.closeModal();
     }
 
     render() {
-        const { showModal, modal } = this.props;
+        const { showModal, modal, isProfitInput } = this.props;
         return (
             <div className='wallet'>
-                {showModal && <Modal close={modal} handleInput={this.handleInput} formSubmitHandler={this.formSubmitHandler} />}
+                {showModal && <Modal close={modal} handleManager={this.handleManager} handleCategory={this.handleCategory} isProfitInput={isProfitInput} handleInput={this.handleInput} formSubmitHandler={this.formSubmitHandler} />}
                 <Sum sum={this.props.sum} />
                 <Buttons modal={this.props.modal} />
             </div>

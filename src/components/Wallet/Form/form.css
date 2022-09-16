@@ -1,0 +1,80 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 65vh;
+}
+
+.form__label {
+    width: 100%;
+}
+
+.form__input {
+    width: 100%;
+    background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 80%);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    cursor: default;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0 !important;
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding: 2px 8px;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.form__btn {
+    border: none;
+    color: #fff;
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.form__btn.confrim {
+    background-color: rgb(51, 204, 51);
+}
+.form__btn.cancel {
+    background-color: rgb(167, 0, 0);
+}
+
+.form__btn.minus {
+    background-color: rgba(255, 0, 0, 0.555);
+}
+
+.form__btnContainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+.react-datepicker-wrapper {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.react-datepicker__input-container input {
+    padding: 10px;
+    text-align: center;
+}
