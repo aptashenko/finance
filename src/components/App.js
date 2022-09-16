@@ -1,7 +1,6 @@
 import './App.css';
 import './Payments/payments.css';
 import './Wallet/wallet.css';
-import payments from '../data/paymentsData.json';
 
 import { PaymentsList } from './Payments/PaymentsList';
 import { Wallet } from './Wallet/Wallet';
@@ -9,8 +8,9 @@ import React from 'react';
 
 class App extends React.Component {
   state = {
-    payments,
+    payments: [],
     sum: 0,
+    showModal: false,
   };
 
   componentWillMount() {
@@ -24,15 +24,38 @@ class App extends React.Component {
     }
   }
 
+  toggleModal = (e) => {
+    e.target === e.currentTarget && this.setState(prevState => ({
+      showModal: !prevState.showModal,
+    }))
+  }
+
   addtoLocalStorage = (payments, sum) => {
     localStorage.setItem('payments', JSON.stringify(payments));
     localStorage.setItem('sum', sum);
   }
 
   addToSum = (data) => {
+    !data.isFuture && this.setState(prevState => ({ sum: prevState.sum + Number(data.amount) }))
+  }
+
+  addPaymentToWallet = (data) => {
+    data.isFuture = !data.isFuture;
     this.setState(prevState => ({
-        sum: prevState.sum + Number(data.amount),
-      }))
+      sum: prevState.sum + Number(data.amount),
+    }))
+    setTimeout(() => {
+      this.addtoLocalStorage(this.state.payments, this.state.sum);
+    })
+  }
+
+  removePayment = (id) => {
+    this.setState(prevState => ({
+      payments: prevState.payments.filter(payment => payment.id !== id)
+    }));
+    setTimeout(() => {
+      this.addtoLocalStorage(this.state.payments, this.state.sum);
+    })
   }
 
   addPayment = data => {
@@ -46,11 +69,11 @@ class App extends React.Component {
   }
 
   render() {
-    const { payments, sum } = this.state;
+    const { payments, sum, showModal } = this.state;
     return (
       <div className='container'>
-        <Wallet onSubmit={this.addPayment} sum={sum} />
-        <PaymentsList list={payments} />
+        <Wallet onSubmit={this.addPayment} sum={sum} showModal={showModal} modal={this.toggleModal} />
+        <PaymentsList list={payments} addPayment={this.addPaymentToWallet} removePayment={this.removePayment} />
       </div>
     )
   }

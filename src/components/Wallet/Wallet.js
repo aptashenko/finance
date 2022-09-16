@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import dayjs from 'dayjs'
 import shortid from 'shortid';
-import Form from './Form';
 import Sum from './Sum';
+import Buttons from './Buttons/Buttons';
+import Modal from '../Modal/Modal';
 
 export class Wallet extends Component {
     state = {
@@ -12,6 +13,7 @@ export class Wallet extends Component {
         category: 'Salary',
         date: '',
         time: '',
+        isFuture: null,
     };
 
     setCurrentTime = () => {
@@ -27,6 +29,7 @@ export class Wallet extends Component {
     formSubmitHandler = (e) => {
         e.preventDefault();
         this.setCurrentTime();
+        this.setState({ isFuture: true });
         setTimeout(() => {
             this.props.onSubmit(this.state)
         }, 100)
@@ -34,10 +37,12 @@ export class Wallet extends Component {
     }
 
     render() {
+        const { showModal, modal } = this.props;
         return (
             <div className='wallet'>
+                {showModal && <Modal close={modal} handleInput={this.handleInput} formSubmitHandler={this.formSubmitHandler} />}
                 <Sum sum={this.props.sum} />
-                <Form submit={this.formSubmitHandler} input={this.handleInput} />
+                <Buttons modal={this.props.modal} />
             </div>
         )
     }
