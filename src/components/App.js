@@ -3,44 +3,39 @@ import './Payments/payments.css';
 import './Wallet/wallet.css';
 
 import { PaymentsList } from './Payments/PaymentsList';
-import { Wallet } from './Wallet/Wallet';
+import Wallet from './Wallet/Wallet';
 import React from 'react';
 
 class App extends React.Component {
   state = {
     payments: [],
+    paymentType: '',
     sum: 0,
     showModal: false,
-    isPofitInput: false,
   };
 
-  componentWillMount() {
-    const parsedLocalPayments = JSON.parse(localStorage.getItem('payments'));
-    const sumNumber = Number(localStorage.sum);
-    if (parsedLocalPayments) {
-        this.setState(prevState => ({
-          payments: prevState.payments.concat(parsedLocalPayments),
-          sum: sumNumber,
-        }))
+  componentDidUpdate(prevProps) {
+    if (prevProps.payments !== this.state.payments) {
+      this.addtoLocalStorage(this.state.payments, this.state.sum);
     }
   }
 
-  closeModal = () => {
-    this.setState({showModal: false})
+  componentDidMount() {
+    const parsedPayments = JSON.parse(localStorage.getItem('payments'));
+    const parsedSum = JSON.parse(localStorage.getItem('sum'));
+    if (parsedPayments) {
+      this.setState({ payments: parsedPayments });
+    }
+    if (parsedSum) {
+      this.setState({ sum: parsedSum });
+    }
   }
 
   toggleModal = (e) => {
-    const plusButton = e.target.classList.contains('plus');
-    const minusButton = e.target.classList.contains('minus');
     e.target === e.currentTarget && this.setState(prevState => ({
       showModal: !prevState.showModal,
+      paymentType: e.target.classList.contains('plus') ? 'Дохід' : 'Витрата'
     }))
-    plusButton && this.setState({
-      isPofitInput: true,
-    })
-    minusButton && this.setState({
-      isPofitInput: false,
-    })
   }
 
   addtoLocalStorage = (payments, sum) => {
@@ -48,45 +43,27 @@ class App extends React.Component {
     localStorage.setItem('sum', sum);
   }
 
-  addToSum = (data) => {
-    !data.isFuture && this.setState(prevState => ({ sum: prevState.sum + Number(data.amount) }))
-  }
-
-  addPaymentToWallet = (data) => {
-    data.isFuture = !data.isFuture;
+  handleSubmit = (values, { resetForm }) => {
     this.setState(prevState => ({
-      sum: prevState.sum + Number(data.amount),
+      payments: [...prevState.payments, values],
+      showModal: false,
     }))
-    setTimeout(() => {
-      this.addtoLocalStorage(this.state.payments, this.state.sum);
-    })
+    resetForm();
   }
 
-  removePayment = (id) => {
+  addSum = (amount, idx) => {
     this.setState(prevState => ({
-      payments: prevState.payments.filter(payment => payment.id !== id)
+      sum: prevState.sum + amount,
     }));
-    setTimeout(() => {
-      this.addtoLocalStorage(this.state.payments, this.state.sum);
-    })
   }
 
-  addPayment = data => {
-    this.setState(prevState => ({
-      payments: [data, ...prevState.payments]
-    }));
-    this.addToSum(data);
-    setTimeout(() => {
-      this.addtoLocalStorage(this.state.payments, this.state.sum);
-    })
-  }
 
   render() {
-    const { payments, sum, showModal, isPofitInput } = this.state;
+    const {sum, payments, showModal, paymentType} = this.state
     return (
       <div className='container'>
-        <Wallet onSubmit={this.addPayment} closeModal={this.closeModal} isProfitInput={isPofitInput} sum={sum} showModal={showModal} modal={this.toggleModal} />
-        <PaymentsList list={payments} addPayment={this.addPaymentToWallet} removePayment={this.removePayment} />
+        <Wallet sum={sum} handleSubmit={this.handleSubmit} type={paymentType} showModal={showModal} modalOpen={this.toggleModal} />
+        <PaymentsList payments={payments} addSum={this.addSum} />
       </div>
     )
   }

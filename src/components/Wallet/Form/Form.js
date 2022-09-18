@@ -1,14 +1,26 @@
-import ProfitForm from './ProfitForm';
-import Expenditure from './Expenditure';
 import './form.css';
+import { Formik, Form } from 'formik';
+import Profit from './ProfitForm';
+import shortid from 'shortid';
+import Cons from './Cons';
 
+export default function MainForm({handleSubmit, type}) {
 
-function Form({ submit, input, isProfitInput, handleCategory, handleManager }) {
+    const initialValues = {
+        date: '',
+        type: type,
+        amount: 0,
+        manager: '',
+        category: '',
+        id: shortid(),
+    }
+
     return (
-        <form className="form" onSubmit={submit}>
-            {isProfitInput ? <ProfitForm input={input} handleManager={handleManager} handleCategory={handleCategory} /> : <Expenditure input={input} />} 
-        </form>
+        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+            <Form className="form">
+                {type === 'Дохід' && <Profit />}
+                {type === 'Витрата' && <Cons />}
+            </Form>
+        </Formik>
     )
 }
-
-export default Form;

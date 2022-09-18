@@ -1,6 +1,6 @@
 import { Field } from 'formik';
 
-export default function Profit() {
+export default function Cons() {
     return (
         <>
             <label className="form__label">Сума, грн

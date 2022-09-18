@@ -1,26 +1,26 @@
 import Payment from "./Payment";
 
-export function PaymentsList({ list, addPayment, removePayment }) {
+export function PaymentsList({ payments, addSum }) {
     return (
         <ul className="payments__list">
             <li className="payments__header">
                 <div className="payments__date">
-                    <p>Date</p>
+                    <p>Дата надходження</p>
                 </div>
                 <div className="payments__type">
-                    <p>Type</p>
+                    <p>Тип платежу</p>
                 </div>
                 <div className="payments__amount">
-                    <p>Amount, UAH</p>
+                    <p>Сума, UAH</p>
                 </div>
                 <div className="payments__name">
-                    <p> Creator </p>
+                    <p> Відповідальний </p>
                 </div>
                 <div className="payments__category">
-                    <p> Category </p>
+                    <p> Категорія </p>
                 </div>
             </li>
-            <Payment lists={list} addPaymentToWallet={addPayment} removePayment={removePayment} />
+            <Payment payments={payments} addSum={addSum} />
         </ul>
     )
 }
