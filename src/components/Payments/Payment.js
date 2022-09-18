@@ -1,12 +1,9 @@
 import dayjs from "dayjs";
 
-function Payment({ payments, addSum }) {
+function Payment({ payments, removePay, addSum }) {
 
     return payments.map(({ id, amount, type, manager, category, date, isFuture }, idx) => {
-        const payDate = dayjs(date).locale('uk').format('DD MMMM YYYY HH:mm:ss');
-        const curDate = dayjs().format('DD MMMM YYYY HH:mm:ss');
-        isFuture = payDate > curDate;
-
+    const payDate = dayjs(date).format('DD.MM.YYYY | HH:mm:ss');
 
         return (
             <li key={id} className="payments__item">
@@ -20,10 +17,10 @@ function Payment({ payments, addSum }) {
                     <p>{amount} UAH</p>
                     {isFuture && <ul className="payments__amount--buttonsContainer">
                         <li className="payments__amount--buttonItem">
-                            <button className="payments__amount--btn add" type="button" onClick={() => { addSum(amount, idx)}}>+</button>
+                            <button className="payments__amount--btn add" onClick={()=>addSum(amount, idx)} type="button">+</button>
                         </li>
                         <li className="payments__amount--button">
-                            <button className="payments__amount--btn remove" type="button">-</button>
+                            <button className="payments__amount--btn remove" onClick={()=>removePay(id)} type="button">-</button>
                         </li>
                     </ul>}
                 </div>

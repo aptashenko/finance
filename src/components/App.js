@@ -5,6 +5,7 @@ import './Wallet/wallet.css';
 import { PaymentsList } from './Payments/PaymentsList';
 import Wallet from './Wallet/Wallet';
 import React from 'react';
+import dayjs from 'dayjs';
 
 class App extends React.Component {
   state = {
@@ -44,6 +45,16 @@ class App extends React.Component {
   }
 
   handleSubmit = (values, { resetForm }) => {
+    const paymentIsFuture = dayjs(values.date).format('DD.MM.YYYY') > dayjs(new Date()).format('DD.MM.YYYY');
+    if (values.type === 'Дохід') {
+      values.amount = `+${values.amount}`
+    } else {
+      values.amount = `-${values.amount}`
+    }
+
+    !paymentIsFuture && this.setState(prevState => ({ sum: prevState.sum + Number(values.amount) }));
+
+    values.isFuture = paymentIsFuture;
     this.setState(prevState => ({
       payments: [...prevState.payments, values],
       showModal: false,
@@ -51,10 +62,18 @@ class App extends React.Component {
     resetForm();
   }
 
-  addSum = (amount, idx) => {
+  addSum = (amount, index) => {
+    const newPayments = this.state.payments;
+    const selectedPayment = newPayments[index];
+    selectedPayment.isFuture = false;
+    
+    this.setState(prevState => ({ payments: newPayments, sum: prevState.sum + Number(amount) }));
+  }
+
+  removePayment = (id) => {
     this.setState(prevState => ({
-      sum: prevState.sum + amount,
-    }));
+      payments: prevState.payments.filter(payment => payment.id !== id),
+    }))
   }
 
 
@@ -63,7 +82,7 @@ class App extends React.Component {
     return (
       <div className='container'>
         <Wallet sum={sum} handleSubmit={this.handleSubmit} type={paymentType} showModal={showModal} modalOpen={this.toggleModal} />
-        <PaymentsList payments={payments} addSum={this.addSum} />
+        <PaymentsList payments={payments} addSum={this.addSum} removePay={this.removePayment} />
       </div>
     )
   }

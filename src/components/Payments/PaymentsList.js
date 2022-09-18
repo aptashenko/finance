@@ -1,6 +1,6 @@
 import Payment from "./Payment";
 
-export function PaymentsList({ payments, addSum }) {
+export function PaymentsList({ payments, addSum, removePay }) {
     return (
         <ul className="payments__list">
             <li className="payments__header">
@@ -20,7 +20,7 @@ export function PaymentsList({ payments, addSum }) {
                     <p> Категорія </p>
                 </div>
             </li>
-            <Payment payments={payments} addSum={addSum} />
+            <Payment payments={payments} addSum={addSum} removePay={removePay} />
         </ul>
     )
 }

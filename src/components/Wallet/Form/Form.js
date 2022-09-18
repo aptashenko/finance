@@ -4,7 +4,7 @@ import Profit from './ProfitForm';
 import shortid from 'shortid';
 import Cons from './Cons';
 
-export default function MainForm({handleSubmit, type}) {
+export default function MainForm({ handleSubmit, type }) {
 
     const initialValues = {
         date: '',
@@ -12,6 +12,7 @@ export default function MainForm({handleSubmit, type}) {
         amount: 0,
         manager: '',
         category: '',
+        isFuture: null,
         id: shortid(),
     }
 
