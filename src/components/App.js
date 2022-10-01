@@ -1,9 +1,11 @@
 import './App.css';
 import './Payments/payments.css';
 import './Wallet/wallet.css';
+import './Search/search.css';
 
 import { PaymentsList } from './Payments/PaymentsList';
 import Wallet from './Wallet/Wallet';
+import Search from './Search/Search';
 import React from 'react';
 import dayjs from 'dayjs';
 
@@ -12,24 +14,56 @@ class App extends React.Component {
     payments: [],
     paymentType: '',
     sum: 0,
+    futureProfit: 0,
+    futureCons: 0,
     showModal: false,
   };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.payments !== this.state.payments) {
-      this.addtoLocalStorage(this.state.payments, this.state.sum);
-    }
+  async componentDidMount() {
+    const data = await this.fetchData('https://63376a2b132b46ee0be13d1f.mockapi.io/api/v1/payments');
+    this.setState(({
+      payments: data,
+    }))
+    for (let pay of this.state.payments) {
+      if (!pay.isFuture) {
+        this.setState(prevState => ({
+          sum: prevState.sum + Number(pay.amount),
+        }))
+      }
+      if (pay.isFuture && pay.type === 'Дохід') {
+        this.setState(prevState => ({
+          futureProfit: prevState.futureProfit + Number(pay.amount),
+        }))
+      }
+      if (pay.isFuture && pay.type === 'Витрата') {
+        this.setState(prevState => ({
+          futureCons: prevState.futureCons + Number(pay.amount),
+        }))
+      }
+      }
   }
 
-  componentDidMount() {
-    const parsedPayments = JSON.parse(localStorage.getItem('payments'));
-    const parsedSum = JSON.parse(localStorage.getItem('sum'));
-    if (parsedPayments) {
-      this.setState({ payments: parsedPayments });
+  fetchData = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  }
+
+  putNewData = (url, data, method) => {
+    const options = {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     }
-    if (parsedSum) {
-      this.setState({ sum: parsedSum });
-    }
+    fetch(url, options);
+  }
+
+  removeData = (url) => {
+    fetch(url, {
+      method: 'DELETE',
+    })
   }
 
   toggleModal = (e) => {
@@ -39,22 +73,24 @@ class App extends React.Component {
     }))
   }
 
-  addtoLocalStorage = (payments, sum) => {
-    localStorage.setItem('payments', JSON.stringify(payments));
-    localStorage.setItem('sum', sum);
-  }
-
   handleSubmit = (values, { resetForm }) => {
-    const paymentIsFuture = dayjs(values.date).format('DD.MM.YYYY') > dayjs(new Date()).format('DD.MM.YYYY');
+
+    const paymentIsFuture = dayjs(values.date).format() > dayjs(new Date()).format();
     if (values.type === 'Дохід') {
       values.amount = `+${values.amount}`
     } else {
       values.amount = `-${values.amount}`
     }
-
-    !paymentIsFuture && this.setState(prevState => ({ sum: prevState.sum + Number(values.amount) }));
-
+    if (!paymentIsFuture) {
+      this.setState(prevState => ({ sum: prevState.sum + Number(values.amount) }));
+    } else if (paymentIsFuture && values.type === 'Дохід') {
+      this.setState(prevState => ({ futureProfit: prevState.futureProfit + Number(values.amount) }));
+    } else if (paymentIsFuture && values.type === 'Витрата') {
+      this.setState(prevState => ({ futureCons: prevState.futureCons + Number(values.amount) }));
+    }
     values.isFuture = paymentIsFuture;
+    this.putNewData('https://63376a2b132b46ee0be13d1f.mockapi.io/api/v1/payments', values, 'POST')
+  
     this.setState(prevState => ({
       payments: [...prevState.payments, values],
       showModal: false,
@@ -66,11 +102,16 @@ class App extends React.Component {
     const newPayments = this.state.payments;
     const selectedPayment = newPayments[index];
     selectedPayment.isFuture = false;
-    
-    this.setState(prevState => ({ payments: newPayments, sum: prevState.sum + Number(amount) }));
+    this.putNewData(`https://63376a2b132b46ee0be13d1f.mockapi.io/api/v1/payments/${selectedPayment.id}`, selectedPayment, 'PUT');
+    this.setState(prevState => ({
+      payments: newPayments,
+      sum: prevState.sum + Number(amount),
+      futureProfit: prevState.futureProfit - Number(amount),
+    }));
   }
 
   removePayment = (id) => {
+    this.removeData(`https://63376a2b132b46ee0be13d1f.mockapi.io/api/v1/payments/${id}`);
     this.setState(prevState => ({
       payments: prevState.payments.filter(payment => payment.id !== id),
     }))
@@ -78,11 +119,16 @@ class App extends React.Component {
 
 
   render() {
-    const {sum, payments, showModal, paymentType} = this.state
+    const {sum, payments, showModal, paymentType, futureProfit, futureCons} = this.state
     return (
       <div className='container'>
-        <Wallet sum={sum} handleSubmit={this.handleSubmit} type={paymentType} showModal={showModal} modalOpen={this.toggleModal} />
-        <PaymentsList payments={payments} addSum={this.addSum} removePay={this.removePayment} />
+        <div className='header'>
+          <Search />
+        </div>
+        <div className='body'>
+          <Wallet sum={sum} futureProfit={futureProfit} futureCons={futureCons} handleSubmit={this.handleSubmit} type={paymentType} showModal={showModal} modalOpen={this.toggleModal} />
+          <PaymentsList payments={payments} addSum={this.addSum} removePay={this.removePayment} />
+        </div>
       </div>
     )
   }

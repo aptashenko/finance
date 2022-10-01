@@ -1,5 +1,7 @@
 .wallet {
-    margin-right: 20px;
+    padding: 0 20px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px 0 0 10px;
 }
 
 .wallet_Sum--profit {
@@ -10,4 +12,11 @@
 .wallet_Sum--expenditure {
     text-align: right;
     color:rgba(255, 0, 0, 0.555);
+}
+
+.title {
+    color: #000;
+    font-size: 12px;
+    display: block;
+    text-align: left;
 }

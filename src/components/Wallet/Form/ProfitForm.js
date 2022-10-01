@@ -12,15 +12,15 @@ export default function Profit() {
             <label className="form__label">Відповідальний
                 <Field as="select" className="form__input" name="manager">
                     <option></option>
-                    <option value="Artem">Артем Пташенко</option>
-                    <option value="Sasha">Олександра Пташенко</option>
+                    <option name="Artem">Артем Пташенко</option>
+                    <option name="Sasha">Олександра Пташенко</option>
                 </Field>
             </label>
             <label className="form__label">Категорія
                 <Field as="select" className="form__input" name="category">
                     <option></option>
-                    <option value="tender">Підготовка тендеру</option>
-                    <option value="lawyers-services">Юридичні послуги</option>
+                    <option name="tender">Підготовка тендеру</option>
+                    <option name="lawyers-services">Юридичні послуги</option>
                 </Field>
             </label>
             <div className="form__btnContainer">

@@ -1,5 +1,14 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+  box-sizing: border-box;
+}
+
 p {
   margin: 0;
+}
+
+body {
+  background-color: #000;
 }
 
 ul {
@@ -11,6 +20,12 @@ ul {
 .container {
   padding: 0 20px;
   display: flex;
+  flex-direction: column;
   margin: 0 auto;
   max-width: 1200px;
+}
+
+.body {
+  display: flex;
+  width: 100%;
 }

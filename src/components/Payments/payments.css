@@ -2,8 +2,9 @@
     margin: 0 auto;
     flex-grow: 1;
     max-width: 1000px;
-    height: 100vh;
     overflow-y: scroll;
+    background-color:aliceblue;
+    border-radius: 0 10px 10px 0;
 }
 .payments__list::-webkit-scrollbar {
     display: none;
@@ -13,11 +14,12 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    border-bottom: 1px solid #000;
+    background-color: rgb(205, 232, 255);
     text-align: center;
     font-weight: 800;
+    font-size: 10px;
 }
-.payments__header div {
+.payments__header li {
     flex: 1;
 }
 .payments__item {
@@ -27,9 +29,10 @@
     align-items: baseline;
     border-bottom: 1px solid #000;
     text-align: center;
+    font-size: 14px;
 }
 
-.payments__item div {
+.payments__item li {
     flex: 1;
 }
 

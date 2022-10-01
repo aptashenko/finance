@@ -12,6 +12,7 @@
     font-weight: 800;
     cursor: pointer;
     text-transform: uppercase;
+    max-width: 90px;
 }
 
 .buttons__btn.plus {
