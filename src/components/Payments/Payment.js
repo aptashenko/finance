@@ -33,6 +33,7 @@ function Payment({ payments, removePay, addSum }) {
                 <li className="payments__comment">
                     <p></p>
                 </li>
+                <button onClick={()=>removePay(id)}>X</button>
             </ul>
         )
     } )
